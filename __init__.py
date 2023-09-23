@@ -23,7 +23,7 @@ tamanho_inicial = 2
 dimensao_quadrado = 20 #atributo importante, determina o tamanho do quadrado (em pixels)
 altura = 500
 largura = 500
-velocidade = 200
+velocidade = 100
 direcao = "baixo"
 pontuacao = 0
 
