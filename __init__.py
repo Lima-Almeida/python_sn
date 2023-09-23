@@ -124,7 +124,7 @@ def mudar_direcao(prox_direcao):
 
 #Mainloops
 #menu.mainloop()
-label = ttk.Label(janela, text="Points:{}".format(pontuacao), 
+label = ttk.Label(janela, text="Pontos:{}".format(pontuacao), 
               font=('consolas', 20))
 label.pack()
 canvas = tk.Canvas(janela, bg="#000000", height=altura, width=largura)
