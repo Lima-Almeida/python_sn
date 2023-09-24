@@ -27,9 +27,14 @@ velocidade = 100
 direcao = "baixo"
 pontuacao = 0
 
-def get_coord_aleatoria():
-    n = random.randint(0, ((altura / dimensao_quadrado) - 1)) * dimensao_quadrado
-    return n
+def get_coord_aleatoria(cobra):
+    x = random.randint(0, ((altura / dimensao_quadrado) - 1)) * dimensao_quadrado
+    y = random.randint(0, ((altura / dimensao_quadrado) - 1)) * dimensao_quadrado
+    for partes in cobra.coordenadas[1:]:
+        if partes[0] == x and partes[1] == y:
+            print("OK")
+            x, y = get_coord_aleatoria(cobra)
+    return [x, y]
 
 
 class Cobra:
@@ -47,20 +52,21 @@ class Cobra:
 
 
 class Ponto:
-    def __init__(self):
-        x = get_coord_aleatoria()
-        y = get_coord_aleatoria()
+    def __init__(self, cobra):
+        x, y = get_coord_aleatoria(cobra)
         self.coordenadas = [x, y]
         canvas.create_oval(x, y, x+dimensao_quadrado, y+dimensao_quadrado, fill="#0000FF", tag="ponto")
 
 def checagem_colisoes(cobra):
     x, y = cobra.coordenadas[0]
 
+    #Checa se houve colisão da cabeça da cobra com as bordas do mapa
     if x < 0 or x >= largura:
         return True
     elif y < 0 or y >= altura:
         return True
     
+    #Checa se houve uma colisão da cabeça da cobra com a própria cobra
     for partes in cobra.coordenadas[1:]:
         if x == partes[0] and y == partes[1]:
             return True
@@ -98,7 +104,7 @@ def calcula_pos(cobra, ponto):
         pontuacao += 1
         label.config(text="Pontos:{}".format(pontuacao))
         canvas.delete("ponto")
-        ponto = Ponto()
+        ponto = Ponto(cobra)
     else:
         del cobra.coordenadas[-1]
         canvas.delete(cobra.quadrados[-1])
@@ -142,6 +148,6 @@ janela.bind('<Down>',
 
 #Instanciando cobra e ponto
 cobra = Cobra()
-ponto = Ponto()
+ponto = Ponto(cobra)
 calcula_pos(cobra, ponto)
 janela.mainloop()
