@@ -26,9 +26,14 @@ largura = 500
 velocidade = 100
 direcao = "baixo"
 pontuacao = 0
+qnt_quadrados = (largura/dimensao_quadrado) * (altura/dimensao_quadrado)
+virou = False
+virou2 = True
+atualizou = False
+bot = False
 
 def get_coord_aleatoria(cobra):
-    x = random.randint(0, ((altura / dimensao_quadrado) - 1)) * dimensao_quadrado
+    x = random.randint(0, ((largura / dimensao_quadrado) - 1)) * dimensao_quadrado
     y = random.randint(0, ((altura / dimensao_quadrado) - 1)) * dimensao_quadrado
     #Checa se o novo ponto será spawnado em cima do corpo da cobra (se sim, gera nova coordenada)
     for partes in cobra.coordenadas[1:]:
@@ -80,8 +85,15 @@ def fim_de_jogo():
     canvas.create_text(canvas.winfo_width()/2, canvas.winfo_height()/2, font=('consolas', 70), text="GAME OVER", fill="red", tag="gameover")
     
 
+def vitoria():
+    canvas.delete(all)
+    canvas.create_text(canvas.winfo_width()/2, canvas.winfo_height()/2, font=('consolas', 70), text="VICTORY", fill="blue", tag="victory")
+
+
 def calcula_pos(cobra, ponto):
     x, y = cobra.coordenadas[0]
+    global direcao
+    global atualizou
 
     if direcao == "cima":
         y -= dimensao_quadrado
@@ -91,6 +103,28 @@ def calcula_pos(cobra, ponto):
         x -= dimensao_quadrado
     elif direcao == "direita":
         x += dimensao_quadrado
+
+    global virou
+    #Bot bem básico que fiz pra checar algumas condições (como a de vitória) sem precisar de fato jogar o jogo até vencer
+    #Bot pode ser ativado e desativado pela variável bot (booleana)
+    if bot:
+        if y == 480 and direcao == "baixo" and atualizou == False:
+            print("OK")
+            direcao = "direita"
+            virou = True
+
+        if virou and atualizou and y == 480 and direcao == "direita":
+            direcao = "cima"
+            virou = False
+
+        if y == 0 and direcao == "cima" and atualizou == False:
+            print("OK")
+            direcao = "direita"
+            virou = True
+
+        if virou and atualizou and y == 0 and direcao == "direita":
+            direcao = "baixo"
+            virou = False
 
     cobra.coordenadas.insert(0, (x, y))
     quadrado = canvas.create_rectangle(x, y, x+dimensao_quadrado, y+dimensao_quadrado, fill="#FFFFFF")
@@ -106,11 +140,18 @@ def calcula_pos(cobra, ponto):
         del cobra.coordenadas[-1]
         canvas.delete(cobra.quadrados[-1])
         del cobra.quadrados[-1]
+
+    if len(cobra.coordenadas) == qnt_quadrados:
+        vitoria()
     
     if checagem_colisoes(cobra):
         fim_de_jogo()
     else:
         janela.after(velocidade, calcula_pos, cobra, ponto)
+        if virou:
+            atualizou = True
+        else:
+            atualizou = False
 
 #Checa se a direcao para qual o jogador está tentando virar é válida
 def mudar_direcao(prox_direcao):
