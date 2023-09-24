@@ -20,7 +20,7 @@ janela = tk.Tk()
 
 #Setando informações da cobra
 tamanho_inicial = 2
-dimensao_quadrado = 20 #atributo importante, determina o tamanho do quadrado (em pixels)
+dimensao_quadrado = 20 #atributo importante, determina o tamanho do quadrado da grid (em pixels)
 altura = 500
 largura = 500
 velocidade = 100
@@ -30,6 +30,7 @@ pontuacao = 0
 def get_coord_aleatoria(cobra):
     x = random.randint(0, ((altura / dimensao_quadrado) - 1)) * dimensao_quadrado
     y = random.randint(0, ((altura / dimensao_quadrado) - 1)) * dimensao_quadrado
+    #Checa se o novo ponto será spawnado em cima do corpo da cobra (se sim, gera nova coordenada)
     for partes in cobra.coordenadas[1:]:
         if partes[0] == x and partes[1] == y:
             print("OK")
@@ -76,11 +77,7 @@ def checagem_colisoes(cobra):
 
 def fim_de_jogo():
     canvas.delete(all)
-    canvas.create_text(canvas.winfo_width()/2, 
-                       canvas.winfo_height()/2,
-                       font=('consolas', 70), 
-                       text="GAME OVER", fill="red", 
-                       tag="gameover")
+    canvas.create_text(canvas.winfo_width()/2, canvas.winfo_height()/2, font=('consolas', 70), text="GAME OVER", fill="red", tag="gameover")
     
 
 def calcula_pos(cobra, ponto):
@@ -115,7 +112,7 @@ def calcula_pos(cobra, ponto):
     else:
         janela.after(velocidade, calcula_pos, cobra, ponto)
 
-
+#Checa se a direcao para qual o jogador está tentando virar é válida
 def mudar_direcao(prox_direcao):
     global direcao
     if prox_direcao == "direita" and direcao != "esquerda":
@@ -130,24 +127,22 @@ def mudar_direcao(prox_direcao):
 
 #Mainloops
 #menu.mainloop()
-label = ttk.Label(janela, text="Pontos:{}".format(pontuacao), 
-              font=('consolas', 20))
+#Setando texto de pontuação e tela do jogo
+label = ttk.Label(janela, text="Pontos:{}".format(pontuacao), font=('consolas', 20))
 label.pack()
 canvas = tk.Canvas(janela, bg="#000000", height=altura, width=largura)
 canvas.pack()
 janela.update()
 
-janela.bind('<Left>', 
-            lambda event: mudar_direcao("esquerda"))
-janela.bind('<Right>', 
-            lambda event: mudar_direcao("direita"))
-janela.bind('<Up>', 
-            lambda event: mudar_direcao("cima"))
-janela.bind('<Down>', 
-            lambda event: mudar_direcao("baixo"))
+#Setando as teclas/controles do jogo (setinhas do teclado)
+janela.bind('<Left>', lambda event: mudar_direcao("esquerda"))
+janela.bind('<Right>', lambda event: mudar_direcao("direita"))
+janela.bind('<Up>', lambda event: mudar_direcao("cima"))
+janela.bind('<Down>', lambda event: mudar_direcao("baixo"))
 
 #Instanciando cobra e ponto
 cobra = Cobra()
 ponto = Ponto(cobra)
+#Chamando função que roda o jogo
 calcula_pos(cobra, ponto)
 janela.mainloop()
