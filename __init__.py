@@ -94,6 +94,8 @@ def ligar_bot(event=None):
     bot = not bot
     print(bot)
 
+
+indo_direita = False
 def calcula_pos(cobra, ponto):
     x, y = cobra.coordenadas[0]
     global direcao
@@ -113,23 +115,47 @@ def calcula_pos(cobra, ponto):
     #Bot bem básico que fiz pra checar algumas condições (como a de vitória) sem precisar de fato jogar o jogo até vencer
     #Bot pode ser ativado e desativado pela variável bot (booleana)
     if bot:
-        if y == 480 and direcao == "baixo" and atualizou == False:
-            print("OK")
-            direcao = "direita"
-            virou = True
+        coordenada_final_x = largura - dimensao_quadrado
+        coordenada_final_y = altura - dimensao_quadrado
+        global indo_direita
+        if indo_direita:
+            if y == coordenada_final_y and direcao == "baixo" and atualizou == False:
+                direcao = "direita"
+                virou = True
 
-        if virou and atualizou and y == 480 and direcao == "direita":
-            direcao = "cima"
-            virou = False
+            if virou and atualizou and y == coordenada_final_y and direcao == "direita":
+                direcao = "cima"
+                virou = False
 
-        if y == 0 and direcao == "cima" and atualizou == False:
-            print("OK")
-            direcao = "direita"
-            virou = True
+            if y == 0 and direcao == "cima" and atualizou == False:
+                direcao = "direita"
+                virou = True
 
-        if virou and atualizou and y == 0 and direcao == "direita":
-            direcao = "baixo"
-            virou = False
+            if virou and atualizou and y == 0 and direcao == "direita":
+                direcao = "baixo"
+                virou = False
+
+            if x == coordenada_final_x:
+                indo_direita = False
+        else:
+            if y == coordenada_final_y and direcao == "baixo" and atualizou == False:
+                direcao = "esquerda"
+                virou = True
+
+            if virou and atualizou and y == coordenada_final_y and direcao == "esquerda":
+                direcao = "cima"
+                virou = False
+
+            if y == 0 and direcao == "cima" and atualizou == False:
+                direcao = "esquerda"
+                virou = True
+
+            if virou and atualizou and y == 0 and direcao == "esquerda":
+                direcao = "baixo"
+                virou = False
+            
+            if x == 0:
+                indo_direita = True
 
     cobra.coordenadas.insert(0, (x, y))
     quadrado = canvas.create_rectangle(x, y, x+dimensao_quadrado, y+dimensao_quadrado, fill="#FFFFFF")
