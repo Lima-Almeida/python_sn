@@ -19,7 +19,7 @@ janela = tk.Tk()
 #Setando os componentes da janela principal
 
 #Setando informações da cobra
-tamanho_inicial = 2
+tamanho_inicial = 60
 dimensao_quadrado = 20 #atributo importante, determina o tamanho do quadrado da grid (em pixels)
 altura = 500
 largura = 500
@@ -28,7 +28,6 @@ direcao = "baixo"
 pontuacao = 0
 qnt_quadrados = (largura/dimensao_quadrado) * (altura/dimensao_quadrado)
 virou = False
-virou2 = True
 atualizou = False
 bot = False
 
@@ -89,10 +88,72 @@ def vitoria():
     canvas.delete(all)
     canvas.create_text(canvas.winfo_width()/2, canvas.winfo_height()/2, font=('consolas', 70), text="VICTORY", fill="blue", tag="victory")
 
+
 def ligar_bot(event=None):
     global bot
     bot = not bot
-    print(bot)
+
+
+def aumentar_velocidade(event=None):
+    global velocidade
+    if(velocidade - 20 <= 0):
+        return
+    else:
+        velocidade -= 20
+
+
+def reduzir_velocidade(event=None):
+    global velocidade
+    if(velocidade + 20 > 400):
+        return
+    else:
+        velocidade += 20
+
+
+def bot_cobra(x, y):
+    coordenada_final_x = largura - dimensao_quadrado
+    coordenada_final_y = altura - 2*dimensao_quadrado
+    global indo_direita
+    global direcao
+    global virou
+    if indo_direita:
+        if y == coordenada_final_y and direcao == "baixo" and atualizou == False:
+            direcao = "direita"
+            virou = True
+
+        if virou and atualizou and y == coordenada_final_y and direcao == "direita":
+            direcao = "cima"
+            virou = False
+
+        if y == 0 and direcao == "cima" and atualizou == False:
+            direcao = "direita"
+            virou = True
+
+        if virou and atualizou and y == 0 and direcao == "direita":
+            direcao = "baixo"
+            virou = False
+
+        if x == coordenada_final_x:
+            indo_direita = False
+    else:
+        if y == coordenada_final_y and direcao == "baixo" and atualizou == False:
+            direcao = "esquerda"
+            virou = True
+
+        if virou and atualizou and y == coordenada_final_y and direcao == "esquerda":
+            direcao = "cima"
+            virou = False
+
+        if y == 0 and direcao == "cima" and atualizou == False:
+            direcao = "esquerda"
+            virou = True
+
+        if virou and atualizou and y == 0 and direcao == "esquerda":
+            direcao = "baixo"
+            virou = False
+        
+        if x == 0:
+            indo_direita = True
 
 
 indo_direita = False
@@ -114,52 +175,14 @@ def calcula_pos(cobra, ponto):
     global virou
     #Bot bem básico que fiz pra checar algumas condições (como a de vitória) sem precisar de fato jogar o jogo até vencer
     #Bot pode ser ativado e desativado pela variável bot (booleana)
+
     if bot:
-        coordenada_final_x = largura - dimensao_quadrado
-        coordenada_final_y = altura - dimensao_quadrado
-        global indo_direita
-        if indo_direita:
-            if y == coordenada_final_y and direcao == "baixo" and atualizou == False:
-                direcao = "direita"
-                virou = True
-
-            if virou and atualizou and y == coordenada_final_y and direcao == "direita":
-                direcao = "cima"
-                virou = False
-
-            if y == 0 and direcao == "cima" and atualizou == False:
-                direcao = "direita"
-                virou = True
-
-            if virou and atualizou and y == 0 and direcao == "direita":
-                direcao = "baixo"
-                virou = False
-
-            if x == coordenada_final_x:
-                indo_direita = False
-        else:
-            if y == coordenada_final_y and direcao == "baixo" and atualizou == False:
-                direcao = "esquerda"
-                virou = True
-
-            if virou and atualizou and y == coordenada_final_y and direcao == "esquerda":
-                direcao = "cima"
-                virou = False
-
-            if y == 0 and direcao == "cima" and atualizou == False:
-                direcao = "esquerda"
-                virou = True
-
-            if virou and atualizou and y == 0 and direcao == "esquerda":
-                direcao = "baixo"
-                virou = False
-            
-            if x == 0:
-                indo_direita = True
+        bot_cobra(x, y)
 
     cobra.coordenadas.insert(0, (x, y))
     quadrado = canvas.create_rectangle(x, y, x+dimensao_quadrado, y+dimensao_quadrado, fill="#FFFFFF")
     cobra.quadrados.insert(0, quadrado)
+    lbl_velocidade.config(text="Velocidade:{}".format(velocidade))
 
     if x == ponto.coordenadas[0] and y == ponto.coordenadas[1]:
         global pontuacao
@@ -200,8 +223,10 @@ def mudar_direcao(prox_direcao):
 #Mainloops
 #menu.mainloop()
 #Setando texto de pontuação e tela do jogo
+lbl_velocidade = ttk.Label(janela, text="velocidade:{}".format(velocidade), font=('consolas', 20))
 label = ttk.Label(janela, text="Pontos:{}".format(pontuacao), font=('consolas', 20))
 label.pack()
+lbl_velocidade.pack()
 canvas = tk.Canvas(janela, bg="#000000", height=altura, width=largura)
 canvas.pack()
 janela.update()
@@ -212,6 +237,8 @@ janela.bind('<Right>', lambda event: mudar_direcao("direita"))
 janela.bind('<Up>', lambda event: mudar_direcao("cima"))
 janela.bind('<Down>', lambda event: mudar_direcao("baixo"))
 janela.bind('b', ligar_bot)
+janela.bind('z', aumentar_velocidade)
+janela.bind('x', reduzir_velocidade)
 
 #Instanciando cobra e ponto
 cobra = Cobra()
