@@ -128,43 +128,82 @@ def bot_cobra(x, y):
     global direcao
     global virou
     #print(indo_direita)
-    if indo_direita:
-        if y == coordenada_final_y and direcao == "baixo" and atualizou == False:
-            direcao = "direita"
-            virou = True
+    if(largura/dimensao_quadrado) % 2 == 0:
+        if indo_direita:
+            if y == coordenada_y_volta and direcao == "baixo" and atualizou == False:
+                direcao = "direita"
+                virou = True
 
-        if virou and atualizou and y == coordenada_final_y and direcao == "direita":
-            direcao = "cima"
-            virou = False
+            if virou and atualizou and y == coordenada_y_volta and direcao == "direita":
+                direcao = "cima"
+                virou = False
 
-        if y == dimensao_quadrado and direcao == "cima" and atualizou == False:
-            direcao = "direita"
-            virou = True
+            if y == dimensao_quadrado and direcao == "cima" and atualizou == False:
+                direcao = "direita"
+                virou = True
 
-        if virou and atualizou and y == dimensao_quadrado and direcao == "direita":
-            direcao = "baixo"
-            virou = False
+            if virou and atualizou and y == dimensao_quadrado and direcao == "direita":
+                direcao = "baixo"
+                virou = False
 
-        if x == coordenada_final_x:
-            indo_direita = False
+            if x == coordenada_final_x:
+                indo_direita = False
+        else:
+            if y == coordenada_y_volta and direcao == "baixo" and atualizou == False:
+                direcao = "esquerda"
+                virou = True
+
+            if y == 0 and direcao == "cima" and atualizou == False:
+                direcao = "esquerda"
+                virou = True
+
+            if virou and atualizou and y == coordenada_y_volta and x == 0 and direcao == "esquerda":
+                direcao = "cima"
+                virou = False
+                indo_direita = True
+
+            if virou and atualizou and y == 0 and x == 0 and direcao == "esquerda":
+                direcao = "baixo"
+                virou = False
+                indo_direita = True
     else:
-        if y == coordenada_y_volta and direcao == "baixo" and atualizou == False:
-            direcao = "esquerda"
-            virou = True
+        if indo_direita:
+            if y == coordenada_final_y and direcao == "baixo" and atualizou == False:
+                direcao = "direita"
+                virou = True
 
-        if y == 0 and direcao == "cima" and atualizou == False:
-            direcao = "esquerda"
-            virou = True
+            if virou and atualizou and y == coordenada_final_y and direcao == "direita":
+                direcao = "cima"
+                virou = False
 
-        if virou and atualizou and y == coordenada_y_volta and x == 0 and direcao == "esquerda":
-            direcao = "cima"
-            virou = False
-            indo_direita = True
+            if y == dimensao_quadrado and direcao == "cima" and atualizou == False:
+                direcao = "direita"
+                virou = True
 
-        if virou and atualizou and y == 0 and x == 0 and direcao == "esquerda":
-            direcao = "baixo"
-            virou = False
-            indo_direita = True
+            if virou and atualizou and y == dimensao_quadrado and direcao == "direita":
+                direcao = "baixo"
+                virou = False
+
+            if x == coordenada_final_x:
+                indo_direita = False
+        else:
+            if y == coordenada_y_volta and direcao == "baixo" and atualizou == False:
+                direcao = "esquerda"
+                virou = True
+
+            if y == 0 and direcao == "cima" and atualizou == False:
+                direcao = "esquerda"
+                virou = True
+
+            if virou and atualizou and y == coordenada_y_volta and x == 0 and direcao == "esquerda":
+                direcao = "cima"
+                virou = False
+                indo_direita = True
+
+            if virou and atualizou and y == 0 and x == 0 and direcao == "esquerda":
+                direcao = "baixo"
+                virou = False
+                indo_direita = True
 
         # if y == 0 and direcao == "cima" and atualizou == False:
         #     direcao = "esquerda"
