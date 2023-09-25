@@ -16,6 +16,6 @@ Lista de alterações feitas:
 -Adicionei uma função de aumentar/reduzir a velocidade da cobrinha. (Tecla 'Z' para aumentar e 'X' para reduzir)
 
 Lista de alterações pendentes:
--Quando duas teclas (cima e esquerda, direita e cima, baixo e direita, etc.) são pressinadas muito rapidamente, existe a chance de a cobra simplesmente burlar a lógica da função mudar_direcao e dar um giro de 180º (mudar a direção mas permanecer na mesma linha/coluna). Quando isso ocorre geralmente acontece um game over pois a cabeça da cobra colide com seu corpo (já que estão na mesma linha). Ainda é necessário desenvolver uma solução para essas ocasiões.
+-Quando duas teclas (cima e esquerda, direita e cima, baixo e direita, etc.) são pressionadas muito rapidamente, existe a chance de a cobra simplesmente burlar a lógica da função mudar_direcao e dar um giro de 180º (mudar a direção mas permanecer na mesma linha/coluna). Quando isso ocorre geralmente acontece um game over pois a cabeça da cobra colide com seu corpo (já que estão na mesma linha). Ainda é necessário desenvolver uma solução para essas ocasiões.
 
--Completar a lógica do bot para que consiga percorrer o campo infinitamente (atualmente ele só vai da esquerda para a direita, uma única vez)
+-Completar a lógica do bot para que consiga percorrer o campo infinitamente.
