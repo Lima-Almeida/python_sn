@@ -21,7 +21,7 @@ janela = tk.Tk()
 #Setando informações da cobra
 tamanho_inicial = 2
 dimensao_quadrado = 20 #atributo importante, determina o tamanho do quadrado da grid (em pixels)
-altura = 500
+altura = 400
 largura = 500
 velocidade = 100
 direcao = "baixo"
@@ -127,7 +127,6 @@ def bot_cobra(x, y):
     global indo_direita
     global direcao
     global virou
-    #print(indo_direita)
     if(largura/dimensao_quadrado) % 2 == 0:
         if indo_direita:
             if y == coordenada_y_volta and direcao == "baixo" and atualizou == False:
@@ -163,6 +162,34 @@ def bot_cobra(x, y):
                 indo_direita = True
 
             if virou and atualizou and y == 0 and x == 0 and direcao == "esquerda":
+                direcao = "baixo"
+                virou = False
+                indo_direita = True
+    elif(altura/dimensao_quadrado) % 2 == 0:
+        if indo_direita:
+            if y == coordenada_y_volta and direcao == "baixo" and atualizou == False:
+                direcao = "direita"
+
+            if x == coordenada_final_x and direcao == "direita" and atualizou == False:
+                direcao = "cima"
+                virou = True
+
+            if virou and atualizou and x == coordenada_final_x and direcao == "cima":
+                direcao = "esquerda"
+                virou = False
+
+            if x == dimensao_quadrado and direcao == "esquerda" and atualizou == False:
+                direcao = "cima"
+                virou = True
+
+            if virou and atualizou and x == dimensao_quadrado and direcao == "cima":
+                direcao = "direita"
+                virou = False
+
+            if y == 0:
+                indo_direita = False
+        else:
+            if x == 0 and direcao == "esquerda":
                 direcao = "baixo"
                 virou = False
                 indo_direita = True
@@ -204,18 +231,6 @@ def bot_cobra(x, y):
                 direcao = "baixo"
                 virou = False
                 indo_direita = True
-
-        # if y == 0 and direcao == "cima" and atualizou == False:
-        #     direcao = "esquerda"
-        #     virou = True
-
-        # if virou and atualizou and y == 0 and direcao == "esquerda":
-        #     direcao = "baixo"
-        #     virou = False
-        
-        # if x == 0:
-        #     indo_direita = True
-
 
 def calcula_pos(cobra, ponto):
     x, y = cobra.coordenadas[0]
