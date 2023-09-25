@@ -89,11 +89,16 @@ def vitoria():
     canvas.delete(all)
     canvas.create_text(canvas.winfo_width()/2, canvas.winfo_height()/2, font=('consolas', 70), text="VICTORY", fill="blue", tag="victory")
 
+def ligar_bot(event=None):
+    global bot
+    bot = not bot
+    print(bot)
 
 def calcula_pos(cobra, ponto):
     x, y = cobra.coordenadas[0]
     global direcao
     global atualizou
+    global bot
 
     if direcao == "cima":
         y -= dimensao_quadrado
@@ -180,6 +185,7 @@ janela.bind('<Left>', lambda event: mudar_direcao("esquerda"))
 janela.bind('<Right>', lambda event: mudar_direcao("direita"))
 janela.bind('<Up>', lambda event: mudar_direcao("cima"))
 janela.bind('<Down>', lambda event: mudar_direcao("baixo"))
+janela.bind('b', ligar_bot)
 
 #Instanciando cobra e ponto
 cobra = Cobra()
