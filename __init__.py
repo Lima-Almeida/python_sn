@@ -21,9 +21,10 @@ janela = tk.Tk()
 #Setando informações da cobra
 tamanho_inicial = 2
 dimensao_quadrado = 20 #atributo importante, determina o tamanho do quadrado da grid (em pixels)
+blocos_por_segundo = 10
 altura = 400
 largura = 500
-velocidade = 100
+periodo = 1000 // blocos_por_segundo
 direcao = "baixo"
 pontuacao = 0
 qnt_quadrados = (largura/dimensao_quadrado) * (altura/dimensao_quadrado)
@@ -94,28 +95,40 @@ def ligar_bot(event=None):
     global bot
     bot = not bot
 
+velocidade_anterior = 0
 def super_velocidade(event=None):
-    global velocidade, supervelocidade
+    global periodo, supervelocidade, blocos_por_segundo, velocidade_anterior
+    velocidade_anterior = blocos_por_segundo
     supervelocidade = not supervelocidade
     if supervelocidade:
-        velocidade = 0
+        periodo = 0
     else:
-        velocidade = 100
+        blocos_por_segundo = velocidade_anterior
 
 def aumentar_velocidade(event=None):
-    global velocidade
-    if(velocidade - 20 <= 0):
+    global blocos_por_segundo
+    if(blocos_por_segundo >= 1000):
         return
     else:
-        velocidade -= 20
+        if blocos_por_segundo < 100 and blocos_por_segundo >= 10:
+            blocos_por_segundo += 10
+        elif blocos_por_segundo < 10:
+            blocos_por_segundo += 1
+        else:
+            blocos_por_segundo += 100
 
 
 def reduzir_velocidade(event=None):
-    global velocidade
-    if(velocidade + 20 > 400):
+    global blocos_por_segundo
+    if(blocos_por_segundo <= 2):
         return
     else:
-        velocidade += 20
+        if blocos_por_segundo <= 10:
+            blocos_por_segundo -= 1
+        elif blocos_por_segundo > 10 and blocos_por_segundo <= 100:
+            blocos_por_segundo -= 10
+        else:
+            blocos_por_segundo -= 100
 
 #Bot bem básico que fiz pra checar algumas condições (como a de vitória) sem precisar de fato jogar o jogo até vencer
 #Bot pode ser ativado e desativado pela variável bot (booleana)
@@ -234,9 +247,9 @@ def bot_cobra(x, y):
 
 def calcula_pos(cobra, ponto):
     x, y = cobra.coordenadas[0]
-    global direcao
-    global atualizou
-    global bot
+    global direcao, atualizou, bot, periodo
+    if not supervelocidade:
+        periodo = 1000 // blocos_por_segundo
 
     if direcao == "cima":
         y -= dimensao_quadrado
@@ -253,7 +266,7 @@ def calcula_pos(cobra, ponto):
     cobra.coordenadas.insert(0, (x, y))
     quadrado = canvas.create_rectangle(x, y, x+dimensao_quadrado, y+dimensao_quadrado, fill="#FFFFFF")
     cobra.quadrados.insert(0, quadrado)
-    lbl_velocidade.config(text="Velocidade:{}".format(420 - velocidade))
+    lbl_velocidade.config(text="Velocidade:{} b/s".format(blocos_por_segundo))
 
     if x == ponto.coordenadas[0] and y == ponto.coordenadas[1]:
         global pontuacao
@@ -272,7 +285,7 @@ def calcula_pos(cobra, ponto):
     if checagem_colisoes(cobra):
         fim_de_jogo()
     else:
-        janela.after(velocidade, calcula_pos, cobra, ponto)
+        janela.after(periodo, calcula_pos, cobra, ponto)
         if virou:
             atualizou = True
         else:
@@ -294,7 +307,7 @@ def mudar_direcao(prox_direcao):
 #Mainloops
 #menu.mainloop()
 #Setando texto de pontuação e tela do jogo
-lbl_velocidade = ttk.Label(janela, text="velocidade:{}".format(420 - velocidade), font=('consolas', 20))
+lbl_velocidade = ttk.Label(janela, text="velocidade:{} b/s".format(blocos_por_segundo), font=('consolas', 20))
 label = ttk.Label(janela, text="Pontos:{}".format(pontuacao), font=('consolas', 20))
 label.pack()
 lbl_velocidade.pack()

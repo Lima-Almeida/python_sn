@@ -13,9 +13,13 @@ Lista de alterações feitas:
 
 -Adicionei um bot para que a cobrinha ande por todos os quadrados do campo automaticamente. Isso foi feito para testar algumas funções sem ter a preocupação de jogar o jogo sem morrer. Também adicionei um botão de liga/desliga para o bot (tecla 'B')
 
--Adicionei uma função de aumentar/reduzir a velocidade da cobrinha. (Tecla 'Z' para aumentar e 'X' para reduzir)
+-Adicionei uma função de aumentar/reduzir a velocidade da cobrinha. (Tecla 'Z' para aumentar e 'X' para reduzir). Também adicionei um botão "supervelocidade" (tecla 'S') que seta a velocidade do jogo para a velocidade máxima, neste modo, não é possível ver as coisas acontecendo visualmente por causa da taxa de atualização com intervalos muito baixos passada para a função 'after' do TKinter. Para sair do modo de supervelocidade, basta pressionar a tecla 'S' novamente
 
 -Completei a lógica do bot para mapas com número par de colunas e/ou linhas. Mantive também uma opção de bot para números ímpares de colunas e linhas, mas aviso previamente que este não é capaz de completar o jogo, pois este caso se trata de um problema NP-difícil
 
+-Remodelei o sistema de velocidade para funcionar com a medida de blocos por segundo (b/s)
+
 Lista de alterações pendentes:
 -Quando duas teclas (cima e esquerda, direita e cima, baixo e direita, etc.) são pressionadas muito rapidamente, existe a chance de a cobra simplesmente burlar a lógica da função mudar_direcao e dar um giro de 180º (mudar a direção mas permanecer na mesma linha/coluna). Quando isso ocorre geralmente acontece um game over pois a cabeça da cobra colide com seu corpo (já que estão na mesma linha). Ainda é necessário desenvolver uma solução para essas ocasiões.
+
+-Adicionar um sistema de restart no jogo
